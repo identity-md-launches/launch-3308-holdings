@@ -1,0 +1,17 @@
+{
+  "kind": "evm_contracts",
+  "contracts": [
+    {
+      "contract": "MockIMD",
+      "constructorArgs": []
+    },
+    {
+      "contract": "Holdings",
+      "constructorArgs": [
+        "$owner",
+        "$contract:MockIMD"
+      ]
+    }
+  ],
+  "notes": "HOLDINGS (HODL) on Sepolia: a fully onchain ERC-721 of at most 1,000 tokens. No official IMD token exists on Sepolia (mainnet IMD 0xd34a99bc0f67ae1bbd63c660e6d0b0dd03e263b7 has no code there), so MockIMD is deployed first: a worthless 18-decimal test ERC-20 with an open faucet, no owner and no admin. Holdings takes owner_ = $owner (who alone can call withdrawETH and withdrawIMD) and imdToken_ = MockIMD, stored immutably. mint() requires exactly 0.00056 ETH and yields an ETH or CASH holding with 50/50 odds; mintWithIMD() pulls exactly 0.35 IMD (scaled by the token's decimals) via SafeERC20 after approval and always yields an IMD holding. Balances are 1 to 1,000,000,000 from documented pseudo-randomness (prevrandao-based, manipulable by block builders; acceptable for Sepolia testing only). ETH and IMD balances are immutable; anyone may call outage(tokenId, newBalance) to strictly lower a CASH balance, down to zero, emitting Outage and ERC-4906 MetadataUpdate. tokenURI returns base64 JSON and SVG rendered onchain. No proxies, no baseURI, no owner power over balances or holding types. Constructors make no external calls and the launch sends no ETH."
+}
